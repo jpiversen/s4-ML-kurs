@@ -32,9 +32,13 @@ ads <- ads_raw %>%
 rm(ads_raw, geo_raw, zip_raw, inc_raw, att_raw, income, municipalities)
 
 # Get a quick overview
-skimr::skim(ads)
-count(ads, ad_owner_type, sort = TRUE)
+skim(ads) 
 count(ads, ad_home_type, sort = TRUE)
+count(ads, kommune_name, sort = TRUE)
+
+# ad_debt and ad_expense has a lot of missing values
+ads %>% 
+  skim(ad_debt, ad_expense)
 
 # Replace NA and modify variables
 ads <- ads %>%
@@ -45,6 +49,11 @@ ads <- ads %>%
     ad_tot_price_per_sqm = ad_tot_price / ad_sqm,
     ad_bedrooms          = parse_number(ad_bedrooms)
   )
+
+# No missing values
+ads %>% 
+  skim(ad_debt, ad_expense)
+
 
 # Split in train/test
 set.seed(42)
